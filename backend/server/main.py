@@ -18,7 +18,11 @@ engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="Nexus Quantum HUD API")
+app = FastAPI(
+    title="Nexus Quantum HUD API",
+    description="High-performance academic intelligence engine",
+    version="4.0.0"
+)
 
 # 2. CORS
 app.add_middleware(
