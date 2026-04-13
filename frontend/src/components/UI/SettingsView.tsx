@@ -1,0 +1,110 @@
+import React, { useState } from 'react';
+import { Settings, Shield, Eye, Palette, Bell, LogOut, Terminal } from 'lucide-react';
+
+export const SettingsView: React.FC = () => {
+    const [glassIntensity, setGlassIntensity] = useState(35);
+    const [aiConfidence, setAiConfidence] = useState(85);
+
+    return (
+        <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-700 pb-12">
+            <header className="flex items-center justify-between">
+                <div>
+                    <h2 className="text-xl font-bold tracking-tight uppercase tracking-widest flex items-center gap-3">
+                        <Settings className="text-primary" /> System Preferences
+                    </h2>
+                    <p className="text-xs text-text-dim">Nexus Configuration • User Personalization</p>
+                </div>
+                <button className="pro-button bg-primary py-2 px-6">Apply Changes</button>
+            </header>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Security Section */}
+                <div className="pro-panel p-6 flex flex-col gap-6">
+                    <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                        <Shield className="w-4 h-4 text-primary" />
+                        <span className="text-xs font-bold uppercase tracking-widest">Security & Protocol</span>
+                    </div>
+
+                    <div className="flex flex-col gap-4">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h4 className="text-[10px] font-bold text-white uppercase tracking-wider">Two-Factor Authentication</h4>
+                                <p className="text-[10px] text-text-dim">Secure terminal logins with secondary tokens</p>
+                            </div>
+                            <div className="w-10 h-5 rounded-full bg-primary/20 relative cursor-pointer border border-primary/30">
+                                <div className="absolute right-1 top-1 w-3 h-3 bg-primary rounded-full" />
+                            </div>
+                        </div>
+
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h4 className="text-[10px] font-bold text-white uppercase tracking-wider">Neural Key Rotation</h4>
+                                <p className="text-[10px] text-text-dim">Rotate AI authentication keys every 30 days</p>
+                            </div>
+                            <div className="w-10 h-5 rounded-full bg-white/5 relative cursor-pointer border border-white/10">
+                                <div className="absolute left-1 top-1 w-3 h-3 bg-text-dim rounded-full" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Aesthetic Section */}
+                <div className="pro-panel p-6 flex flex-col gap-6">
+                    <div className="flex items-center gap-3 border-b border-white/5 pb-4">
+                        <Palette className="w-4 h-4 text-cyan-400" />
+                        <span className="text-xs font-bold uppercase tracking-widest">Aesthetic Interface</span>
+                    </div>
+
+                    <div className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between text-[10px] font-bold text-text-dim uppercase">
+                                <span>Glassmorphism Density</span>
+                                <span>{glassIntensity}%</span>
+                            </div>
+                            <input 
+                                type="range" 
+                                className="w-full accent-primary bg-white/5 h-1 rounded-full appearance-none" 
+                                value={glassIntensity}
+                                onChange={(e) => setGlassIntensity(parseInt(e.target.value))}
+                            />
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+                            <div className="flex justify-between text-[10px] font-bold text-text-dim uppercase">
+                                <span>AI Response Confidence Filter</span>
+                                <span>{aiConfidence}% Threshold</span>
+                            </div>
+                            <input 
+                                type="range" 
+                                className="w-full accent-cyan-400 bg-white/5 h-1 rounded-full appearance-none" 
+                                value={aiConfidence}
+                                onChange={(e) => setAiConfidence(parseInt(e.target.value))}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Profile Section */}
+                <div className="pro-panel p-6 flex items-center gap-6">
+                    <div className="w-16 h-16 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-xl font-bold text-primary">
+                        S
+                    </div>
+                    <div className="flex-1">
+                        <h4 className="text-sm font-bold">Sumit Prajapati</h4>
+                        <p className="text-[10px] text-text-dim uppercase tracking-widest font-mono">System Operator • ID_78422</p>
+                    </div>
+                    <button className="p-3 pro-panel bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/30">
+                        <LogOut className="w-4 h-4" />
+                    </button>
+                </div>
+
+                <div className="pro-panel p-6 bg-black/40 border-primary/20 flex flex-col items-center justify-center gap-4">
+                    <Terminal className="text-primary w-8 h-8 opacity-20" />
+                    <p className="text-[10px] text-text-dim text-center uppercase tracking-[0.3em] font-bold">
+                        Command Terminal Protocol: <span className="text-primary">ENCRYPTED</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+};

@@ -5,12 +5,14 @@ import { CalendarView } from './components/UI/CalendarView';
 import { TaskView } from './components/UI/TaskView';
 import { ProgressView } from './components/UI/ProgressView';
 import { AnalyticsView } from './components/UI/AnalyticsView';
+import { HistoryView } from './components/UI/HistoryView';
+import { SettingsView } from './components/UI/SettingsView';
 import { AssistantModel } from './components/Assistant/AssistantModel';
 import { Login } from './components/Auth/Login';
 import { Register } from './components/Auth/Register';
 import { ChatInterface } from './components/UI/ChatInterface';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Bell, ShieldCheck } from 'lucide-react';
+import { Activity, Bell } from 'lucide-react';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -29,6 +31,8 @@ function App() {
       case 'tasks': return <TaskView />;
       case 'attendance': return <ProgressView />;
       case 'analytics': return <AnalyticsView />;
+      case 'history': return <HistoryView />;
+      case 'settings': return <SettingsView />;
       default: return (
         <div className="pro-panel flex-1 flex flex-col items-center justify-center p-12 text-center opacity-50 h-full">
             <Activity className="w-12 h-12 mb-4 animate-pulse text-primary" />
