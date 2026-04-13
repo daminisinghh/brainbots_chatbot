@@ -36,4 +36,5 @@ scratch/
 implementation_plan.md
 task.md
 walkthrough.md
- backend/ml/artifacts/
+backend/ml/artifacts/
+ml/

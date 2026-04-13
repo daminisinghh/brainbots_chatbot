@@ -12,7 +12,7 @@ import { Login } from './components/Auth/Login';
 import { Register } from './components/Auth/Register';
 import { ChatInterface } from './components/UI/ChatInterface';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Bell } from 'lucide-react';
+import { Activity, Bell, ShieldCheck } from 'lucide-react';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
