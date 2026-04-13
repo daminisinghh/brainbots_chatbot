@@ -53,11 +53,13 @@ export const Dashboard: React.FC = () => {
     fetchPrediction();
   }, []);
 
-  // Update last data point based on backend prediction
-  const chartData = [...gpaHistoryData];
-  if (prediction?.predicted_gpa) {
-      chartData[3].gpa = parseFloat(prediction.predicted_gpa);
-  }
+  // Update last data point based on backend prediction without mutating read-only objects
+  const chartData = gpaHistoryData.map((item, index) => {
+    if (index === 3 && prediction?.predicted_gpa) {
+      return { ...item, gpa: parseFloat(prediction.predicted_gpa) };
+    }
+    return item;
+  });
 
   return (
     <div className="flex flex-col gap-6">
