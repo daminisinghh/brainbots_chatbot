@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { Sidebar } from './components/UI/Sidebar';
 import { Dashboard } from './components/UI/Dashboard';
+import { CalendarView } from './components/UI/CalendarView';
+import { TaskView } from './components/UI/TaskView';
+import { ProgressView } from './components/UI/ProgressView';
+import { AnalyticsView } from './components/UI/AnalyticsView';
 import { AssistantModel } from './components/Assistant/AssistantModel';
 import { Login } from './components/Auth/Login';
 import { Register } from './components/Auth/Register';
@@ -16,6 +20,23 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setToken(null);
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'dashboard': return <Dashboard />;
+      case 'calendar': return <CalendarView />;
+      case 'tasks': return <TaskView />;
+      case 'attendance': return <ProgressView />;
+      case 'analytics': return <AnalyticsView />;
+      default: return (
+        <div className="pro-panel flex-1 flex flex-col items-center justify-center p-12 text-center opacity-50 h-full">
+            <Activity className="w-12 h-12 mb-4 animate-pulse text-primary" />
+            <h2 className="text-xl font-bold">Module Initialization</h2>
+            <p className="max-w-xs text-sm mt-2 text-text-dim">This component is currently synchronizing with the central academic repository.</p>
+        </div>
+      );
+    }
   };
 
   return (
@@ -43,8 +64,8 @@ function App() {
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
           {/* Column 2: Main Feature Module */}
-          <main className="pro-main-col">
-            <header className="flex justify-between items-center mb-4">
+          <main className="pro-main-col overflow-y-auto">
+            <header className="flex justify-between items-center mb-4 shrink-0">
               <div>
                 <h1 className="text-2xl font-bold tracking-tight">
                   {activeTab === 'dashboard' ? 'Academic Hub' : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
@@ -63,17 +84,16 @@ function App() {
             </header>
 
             <AnimatePresence mode="wait">
-              {activeTab === 'dashboard' ? (
-                <motion.div key="dash" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                  <Dashboard />
-                </motion.div>
-              ) : (
-                <div className="pro-panel flex-1 flex flex-col items-center justify-center p-12 text-center opacity-50">
-                  <Activity className="w-12 h-12 mb-4 animate-pulse text-primary" />
-                  <h2 className="text-xl font-bold">Module Initialization</h2>
-                  <p className="max-w-xs text-sm mt-2 text-text-dim">This component is currently synchronizing with the central academic repository.</p>
-                </div>
-              )}
+              <motion.div 
+                key={activeTab} 
+                initial={{ opacity: 0, x: 20 }} 
+                animate={{ opacity: 1, x: 0 }} 
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                className="flex-1"
+              >
+                {renderContent()}
+              </motion.div>
             </AnimatePresence>
           </main>
 
