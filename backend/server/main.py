@@ -1,6 +1,12 @@
 import pickle
 import os
+import sys
 import numpy as np
+
+# Add backend directory to sys.path for proper module resolution
+BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if BACKEND_DIR not in sys.path:
+    sys.path.append(BACKEND_DIR)
 from typing import List, Optional
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -11,15 +17,23 @@ from pydantic import BaseModel
 
 from database.models import Base, User, StudentProfile
 from server.auth import verify_password, get_password_hash, create_access_token
+from ml.common import DummyModel
 
-# 1. Database Setup
-SQLALCHEMY_DATABASE_URL = "sqlite:///./database/nexus.db"
+# 1. Path Setup
+BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT_DIR = os.path.dirname(BACKEND_DIR)
+DATABASE_PATH = os.path.join(ROOT_DIR, "database", "nexus.db")
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
+
+GPA_MODEL_PATH = os.path.join(BACKEND_DIR, "ml", "artifacts", "gpa_model.pkl")
+RISK_MODEL_PATH = os.path.join(BACKEND_DIR, "ml", "artifacts", "risk_model.pkl")
+
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Nexus Quantum HUD API",
+    title="Zenith Pro Academic Intelligence",
     description="High-performance academic intelligence engine",
     version="4.0.0"
 )
@@ -34,18 +48,19 @@ app.add_middleware(
 )
 
 # 3. ML Model Loading
-GPA_MODEL_PATH = "ml/artifacts/gpa_model.pkl"
-RISK_MODEL_PATH = "ml/artifacts/risk_model.pkl"
-
 gpa_model = None
 risk_model = None
 
-if os.path.exists(GPA_MODEL_PATH):
-    with open(GPA_MODEL_PATH, 'rb') as f:
-        gpa_model = pickle.load(f)
-if os.path.exists(RISK_MODEL_PATH):
-    with open(RISK_MODEL_PATH, 'rb') as f:
-        risk_model = pickle.load(f)
+try:
+    if os.path.exists(GPA_MODEL_PATH):
+        with open(GPA_MODEL_PATH, 'rb') as f:
+            gpa_model = pickle.load(f)
+    if os.path.exists(RISK_MODEL_PATH):
+        with open(RISK_MODEL_PATH, 'rb') as f:
+            risk_model = pickle.load(f)
+    print(f"Models loaded successfully: GPA={gpa_model is not None}, Risk={risk_model is not None}")
+except Exception as e:
+    print(f"Error loading models: {e}")
 
 # 4. Pydantic Models
 class UserCreate(BaseModel):

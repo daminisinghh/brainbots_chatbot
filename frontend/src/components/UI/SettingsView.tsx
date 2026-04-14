@@ -87,10 +87,10 @@ export const SettingsView: React.FC = () => {
                 {/* Profile Section */}
                 <div className="pro-panel p-6 flex items-center gap-6">
                     <div className="w-16 h-16 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-xl font-bold text-primary">
-                        S
+                        D
                     </div>
                     <div className="flex-1">
-                        <h4 className="text-sm font-bold">Sumit Prajapati</h4>
+                        <h4 className="text-sm font-bold">daminisinghh</h4>
                         <p className="text-[10px] text-text-dim uppercase tracking-widest font-mono">System Operator • ID_78422</p>
                     </div>
                     <button className="p-3 pro-panel bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/30">
