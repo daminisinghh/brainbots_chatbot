@@ -11,6 +11,7 @@ import { AssistantModel } from './components/Assistant/AssistantModel';
 import { Login } from './components/Auth/Login';
 import { Register } from './components/Auth/Register';
 import { ChatInterface } from './components/UI/ChatInterface';
+import { MouseGlow } from './components/UI/MouseGlow';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity, Bell, ShieldCheck } from 'lucide-react';
 
@@ -45,6 +46,7 @@ function App() {
 
   return (
     <div className="relative w-full h-screen bg-bg text-white overflow-hidden">
+      <MouseGlow />
       {/* Restored Awesome Background & 3D Environment */}
       <AssistantModel />
 

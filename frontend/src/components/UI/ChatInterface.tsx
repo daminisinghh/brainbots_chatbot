@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Terminal, Shield, Cpu } from 'lucide-react';
+import { Send, Terminal, Shield, Cpu, Mic } from 'lucide-react';
 import { parseMessage } from '../../logic/nlp';
 
 interface Message {
@@ -57,7 +57,7 @@ export const ChatInterface: React.FC = () => {
   return (
     <div className="flex flex-col h-full bg-transparent overflow-hidden border-l border-white/5">
       {/* Messages Area with Data stream background */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide data-stream-bg">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-hide data-stream-bg">
         <AnimatePresence initial={false}>
           {messages.map((msg) => (
             <motion.div
@@ -119,8 +119,9 @@ export const ChatInterface: React.FC = () => {
         <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-primary/40" />
 
         <div className="relative group">
-          <div className="absolute left-4 top-4">
+          <div className="absolute left-4 top-4 flex gap-2 items-center">
             <Terminal className="w-4 h-4 text-primary group-focus-within:text-secondary transition-colors" />
+            <Mic className="w-3 h-3 text-white/20 hover:text-accent cursor-pointer transition-colors" />
           </div>
           <input
             value={input}
