@@ -43,6 +43,7 @@ export const Dashboard: React.FC = () => {
           extracurricular_hours: 5.0,
           previous_gpa: 3.6
         });
+        setPrediction(res.data);
       } catch {
         console.error("ANALYSIS_LINK_ERROR");
       } finally {
@@ -73,7 +74,7 @@ export const Dashboard: React.FC = () => {
                     <span className="text-xs font-bold text-text-main uppercase tracking-wider">Predictive Trajectory</span>
                 </div>
                 <div className="text-right">
-                    <div className="text-2xl font-bold font-mono leading-none">{loading ? '--' : prediction.predicted_gpa}</div>
+                    <div className="text-2xl font-bold font-mono leading-none">{loading ? '--' : (prediction?.predicted_gpa || 'N/A')}</div>
                     <div className="text-[10px] text-green-500 font-bold uppercase tracking-wider">Projected GPA</div>
                 </div>
             </div>
@@ -191,7 +192,7 @@ export const Dashboard: React.FC = () => {
                 <div className="m-auto text-xs text-text-dim italic">Synthesizing directive stream...</div>
             ) : (
                 <div className="flex flex-col gap-4">
-                    {prediction.recommendations.map((rec: string, i: number) => (
+                    {prediction?.recommendations?.map((rec: string, i: number) => (
                         <div key={i} className="flex gap-4 p-4 pro-card relative overflow-hidden group">
                             {/* Animated Background Sparkle */}
                             <div className="absolute top-0 right-0 w-20 h-full bg-gradient-to-l from-white/5 to-transparent skew-x-12 translate-x-10 group-hover:translate-x-0 transition-transform duration-500" />
@@ -203,7 +204,9 @@ export const Dashboard: React.FC = () => {
                                 <span className="text-cyan-300 font-bold tracking-wider">SYS_OPT:</span> {rec}
                             </p>
                         </div>
-                    ))}
+                    )) || (
+                        <div className="m-auto text-xs text-text-dim italic">No recommendations available at this time.</div>
+                    )}
                 </div>
             )}
         </div>
