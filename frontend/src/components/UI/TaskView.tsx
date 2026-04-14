@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { mockAssignments as initialAssignments } from '../../data/mockData';
-import { Plus, MoreHorizontal, AlertCircle, Clock, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Plus, MoreHorizontal, AlertCircle, Clock, CheckCircle2, ChevronRight, Trash2 } from 'lucide-react';
 
 export const TaskView: React.FC = () => {
     const [tasks, setTasks] = useState(initialAssignments);
@@ -13,6 +13,25 @@ export const TaskView: React.FC = () => {
             }
             return t;
         }));
+    };
+
+    const addTask = () => {
+        const title = prompt("Enter new directive title:");
+        if (!title) return;
+        const newTask = {
+            id: Date.now().toString(),
+            title: title,
+            subject: "SYSTEM",
+            dueDate: "pending",
+            status: "pending" as const,
+            priority: "medium" as const
+        };
+        setTasks(prev => [...prev, newTask]);
+    };
+
+    const deleteTask = (id: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setTasks(prev => prev.filter(t => t.id !== id));
     };
 
     const columns = [
@@ -28,7 +47,7 @@ export const TaskView: React.FC = () => {
                     <h2 className="text-xl font-bold tracking-tight uppercase tracking-widest">Task Matrix</h2>
                     <p className="text-xs text-text-dim font-mono">Central Objective Distribution • Nexus Core</p>
                 </div>
-                <button className="pro-button flex items-center gap-2 py-2 px-4 shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+                <button onClick={addTask} className="pro-button flex items-center gap-2 py-2 px-4 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:scale-105 transition-transform">
                     <Plus className="w-4 h-4" /> Initialize Task
                 </button>
             </header>
@@ -44,7 +63,7 @@ export const TaskView: React.FC = () => {
                                     {tasks.filter(a => a.status === col.id).length.toString().padStart(2, '0')}
                                 </span>
                             </div>
-                            <MoreHorizontal className="w-4 h-4 text-text-dim cursor-pointer" />
+                            <MoreHorizontal className="w-4 h-4 text-text-dim cursor-pointer hover:text-white transition-colors" />
                         </div>
 
                         <div className="flex-1 flex flex-col gap-3">
@@ -57,24 +76,29 @@ export const TaskView: React.FC = () => {
                                     {/* Scanline Effect on Hover */}
                                     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent h-20 -translate-y-full group-hover:animate-scanline pointer-events-none" />
                                     
-                                    <div className="flex justify-between items-start">
+                                    <div className="flex justify-between items-start relative z-10">
                                         <div className={`text-[10px] font-bold px-2 py-0.5 rounded border border-current uppercase tracking-tighter ${
                                             task.priority === 'high' ? 'text-red-400 opacity-80' : 
                                             task.priority === 'medium' ? 'text-yellow-400 opacity-80' : 'text-blue-400 opacity-80'
                                         }`}>
                                             {task.priority}_Priority
                                         </div>
-                                        <div className="text-[10px] font-mono text-text-dim">{task.subject}</div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="text-[10px] font-mono text-text-dim">{task.subject}</div>
+                                            <button onClick={(e) => deleteTask(task.id, e)} className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-red-500/10 hover:text-red-400 text-text-dim transition-all">
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                            </button>
+                                        </div>
                                     </div>
                                     
-                                    <div className="flex items-center justify-between gap-2">
+                                    <div className="flex items-center justify-between gap-2 relative z-10">
                                         <div className="text-sm font-bold group-hover:text-primary transition-colors leading-relaxed">
                                             {task.title}
                                         </div>
                                         <ChevronRight className="w-4 h-4 text-text-dim transition-transform group-hover:translate-x-1" />
                                     </div>
                                     
-                                    <div className="flex items-center gap-4 border-t border-white/5 pt-3">
+                                    <div className="flex items-center gap-4 border-t border-white/5 pt-3 relative z-10">
                                         <div className="flex items-center gap-1.5 text-[10px] text-text-dim uppercase font-bold tracking-tighter">
                                             <Clock className="w-3 h-3" /> {task.dueDate}
                                         </div>
@@ -89,7 +113,7 @@ export const TaskView: React.FC = () => {
                             ))}
 
                             {/* New Task Entry Placeholder */}
-                            <div className="border border-dashed border-white/10 rounded-lg p-6 flex flex-col items-center justify-center gap-2 group hover:bg-white/5 transition-all cursor-pointer">
+                            <div onClick={addTask} className="border border-dashed border-white/10 rounded-lg p-6 flex flex-col items-center justify-center gap-2 group hover:bg-white/5 hover:border-primary/30 transition-all cursor-pointer">
                                 <Plus className="w-6 h-6 text-text-dim group-hover:text-primary transition-transform group-hover:scale-110" />
                                 <span className="text-[10px] font-bold text-text-dim uppercase tracking-widest group-hover:text-primary">New_Directive</span>
                             </div>

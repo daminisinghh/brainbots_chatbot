@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { motion, useSpring } from 'framer-motion';
 
 export const MouseGlow: React.FC = () => {
-    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
 
     // Smooth spring physics for the glow to "trail" slightly
     const springX = useSpring(0, { stiffness: 50, damping: 20 });

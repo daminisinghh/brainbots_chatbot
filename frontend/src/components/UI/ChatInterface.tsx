@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Terminal, Shield, Cpu, Mic } from 'lucide-react';
+import { Send, Terminal, Shield, Cpu } from 'lucide-react';
 import { parseMessage } from '../../logic/nlp';
 
 interface Message {
@@ -51,6 +51,16 @@ export const ChatInterface: React.FC = () => {
         };
         setMessages(prev => [...prev, aiMessage]);
         setIsTyping(false);
+
+        // Voice Assistance (Text-to-Speech)
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Cancel any ongoing speech
+            const utterance = new SpeechSynthesisUtterance(response.message);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.1; // Slightly higher pitch for AI vibe
+            utterance.volume = 0.8;
+            window.speechSynthesis.speak(utterance);
+        }
     }, 800);
   };
 
@@ -121,7 +131,6 @@ export const ChatInterface: React.FC = () => {
         <div className="relative group">
           <div className="absolute left-4 top-4 flex gap-2 items-center">
             <Terminal className="w-4 h-4 text-primary group-focus-within:text-secondary transition-colors" />
-            <Mic className="w-3 h-3 text-white/20 hover:text-accent cursor-pointer transition-colors" />
           </div>
           <input
             value={input}
