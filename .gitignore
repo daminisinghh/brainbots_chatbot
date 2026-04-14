@@ -21,8 +21,6 @@ env/
 venv/
 ENV/
 
-# Database
-database/*.db
 
 # OS Files
 .DS_Store
@@ -36,5 +34,3 @@ scratch/
 implementation_plan.md
 task.md
 walkthrough.md
-backend/ml/artifacts/
-ml/
