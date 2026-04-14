@@ -5,7 +5,7 @@ export type Intent = 'get_schedule' | 'get_attendance' | 'get_assignments' | 'ge
 export interface AssistantResponse {
   intent: Intent;
   message: string;
-  data?: any;
+  data?: unknown;
 }
 
 export const parseMessage = (text: string): AssistantResponse => {

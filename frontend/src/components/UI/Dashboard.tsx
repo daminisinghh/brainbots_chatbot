@@ -43,8 +43,7 @@ export const Dashboard: React.FC = () => {
           extracurricular_hours: 5.0,
           previous_gpa: 3.6
         });
-        setPrediction(res.data);
-      } catch (err) {
+      } catch {
         console.error("ANALYSIS_LINK_ERROR");
       } finally {
         setLoading(false);

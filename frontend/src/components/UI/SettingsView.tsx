@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Shield, Eye, Palette, Bell, LogOut, Terminal } from 'lucide-react';
+import { Settings, Shield, Palette, LogOut, Terminal } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
     const [glassIntensity, setGlassIntensity] = useState(35);
