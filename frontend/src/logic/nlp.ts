@@ -12,15 +12,15 @@ export const parseMessage = (text: string): AssistantResponse => {
   const query = text.toLowerCase();
 
   // Greeting
-  if (query.includes('hi') || query.includes('hello') || query.includes('hey') || query.includes('who are you')) {
+  if (query.includes('hi') || query.includes('hello') || query.includes('hey') || query.includes('who are you') || query.includes('yo') || query.includes('supp') || query.includes('wake up')) {
     return {
       intent: 'greet',
-      message: "Hello! I'm Nexus, your AI campus assistant. How can I help you manage your studies today?",
+      message: "Neural Link Established. I am Nexus. How can I assist with your academic trajectory today?",
     };
   }
 
   // Schedule
-  if (query.includes('schedule') || query.includes('class') || query.includes('timetable') || query.includes('appointment')) {
+  if (query.includes('schedule') || query.includes('calendar') || query.includes('class') || query.includes('timetable') || query.includes('appointment') || query.includes('lecture') || query.includes('time')) {
     const today = 'Monday'; // Defaulting for demo purposes
     const todayClasses = mockSchedule.filter(s => s.day === today);
     return {
@@ -31,7 +31,7 @@ export const parseMessage = (text: string): AssistantResponse => {
   }
 
   // Attendance
-  if (query.includes('attendance') || query.includes('present') || query.includes('bunk')) {
+  if (query.includes('attendance') || query.includes('present') || query.includes('bunk') || query.includes('progress') || query.includes('grade') || query.includes('gpa') || query.includes('radar')) {
     const lowAttendance = mockAttendance.filter(a => a.percentage < 75);
     const lowSubjects = lowAttendance.map(a => a.subject).join(', ');
     return {
@@ -44,7 +44,7 @@ export const parseMessage = (text: string): AssistantResponse => {
   }
 
   // Assignments
-  if (query.includes('assignment') || query.includes('pending') || query.includes('due') || query.includes('homework')) {
+  if (query.includes('assignment') || query.includes('pending') || query.includes('due') || query.includes('homework') || query.includes('task') || query.includes('matrix') || query.includes('work')) {
     const pending = mockAssignments.filter(a => a.status === 'pending');
     return {
       intent: 'get_assignments',
@@ -63,10 +63,16 @@ export const parseMessage = (text: string): AssistantResponse => {
       };
     }
     const latest = mockAnnouncements[0];
-    if (query.includes('about') || query.includes('detail') || query.includes('is it')) {
+    const isAffirmative = query.includes('about') || query.includes('detail') || query.includes('is it') || 
+                           query.includes('yes') || query.includes('please') || query.includes('more') || 
+                           query.includes('sure') || query.includes('ok') || query.includes('okay') || 
+                           query.includes('yeah') || query.includes('yup') || query.includes('tell') ||
+                           query.includes('show me');
+
+    if (isAffirmative) {
       return {
         intent: 'get_announcements',
-        message: `The announcement "${latest.title}" is regarding: ${latest.content}`,
+        message: `The latest update "${latest.title}" is regarding: ${latest.content}`,
         data: mockAnnouncements,
       };
     }

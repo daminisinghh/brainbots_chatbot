@@ -12,13 +12,15 @@ import { Login } from './components/Auth/Login';
 import { Register } from './components/Auth/Register';
 import { ChatInterface } from './components/UI/ChatInterface';
 import { MouseGlow } from './components/UI/MouseGlow';
+import { VoiceAssistant } from './components/Assistant/VoiceAssistant';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Bell, ShieldCheck } from 'lucide-react';
+import { Activity, Bell, ShieldCheck, LogOut } from 'lucide-react';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [isRegistering, setIsRegistering] = useState(false);
+  const [voiceActive, setVoiceActive] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -30,9 +32,9 @@ function App() {
       case 'dashboard': return <Dashboard />;
       case 'calendar': return <CalendarView />;
       case 'tasks': return <TaskView />;
-      case 'attendance': return <ProgressView />;
+      case 'attendance': return <ProgressView setActiveTab={setActiveTab} />;
       case 'analytics': return <AnalyticsView />;
-      case 'history': return <HistoryView />;
+      case 'history': return <HistoryView setActiveTab={setActiveTab} />;
       case 'settings': return <SettingsView />;
       default: return (
         <div className="pro-panel flex-1 flex flex-col items-center justify-center p-12 text-center opacity-50 h-full">
@@ -48,7 +50,12 @@ function App() {
     <div className="relative w-full h-screen bg-bg text-white overflow-hidden">
       <MouseGlow />
       {/* Restored Awesome Background & 3D Environment */}
-      <AssistantModel />
+      <AssistantModel isListening={voiceActive} />
+      <VoiceAssistant 
+        isActive={voiceActive} 
+        setIsActive={setVoiceActive} 
+        onCommand={(tab) => setActiveTab(tab)} 
+      />
 
       {!token ? (
         <div className="relative z-20 flex items-center justify-center h-full px-6">
@@ -67,7 +74,12 @@ function App() {
       ) : (
         <div className="pro-container relative z-10">
           {/* Column 1: Navigation Sidebar */}
-          <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+          <Sidebar 
+            activeTab={activeTab} 
+            setActiveTab={setActiveTab} 
+            isVoiceActive={voiceActive}
+            onToggleVoice={() => setVoiceActive(!voiceActive)}
+          />
 
           {/* Column 2: Main Feature Module */}
           <main className="pro-main-col overflow-y-auto">
@@ -134,9 +146,24 @@ function App() {
 
                 <button 
                     onClick={handleLogout}
-                    className="w-full p-4 text-[10px] font-bold text-accent hover:bg-accent/10 border border-accent/20 transition-all uppercase"
+                    className="group relative w-full p-4 overflow-hidden rounded-lg border border-red-500/30 bg-red-500/5 hover:bg-red-500/10 transition-all duration-500"
                 >
-                    Terminate Session
+                    {/* Animated Danger Stripe Background */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(239,68,68,0.1)_10px,rgba(239,68,68,0.1)_20px)]" />
+                    
+                    {/* Glow effect */}
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)]" />
+                    
+                    <div className="relative z-10 flex items-center justify-center gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                        <span className="text-[10px] font-bold text-red-400 group-hover:text-red-300 uppercase tracking-[0.3em] transition-colors">
+                            End_Protocol_Session
+                        </span>
+                        <LogOut className="w-3.5 h-3.5 text-red-500 group-hover:translate-x-1 transition-transform" />
+                    </div>
+
+                    {/* Scanning Line */}
+                    <div className="absolute top-0 left-0 w-full h-[1px] bg-red-500/50 -translate-y-full group-hover:animate-scanline" />
                 </button>
             </div>
           </aside>

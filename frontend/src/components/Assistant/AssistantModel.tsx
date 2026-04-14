@@ -10,8 +10,8 @@ import {
 } from '@react-three/drei';
 import * as THREE from 'three';
 
-// A dynamic particle swarm that reacts to mouse
-const ParticleSwarm = () => {
+// A dynamic particle swarm that reacts to mouse and voice
+const ParticleSwarm = ({ isListening }: { isListening: boolean }) => {
   const pointsRef = useRef<THREE.Points>(null);
   const shellRef = useRef<THREE.Mesh>(null);
 
@@ -39,19 +39,21 @@ const ParticleSwarm = () => {
     const targetY = (state.pointer.y * Math.PI) * 0.15;
 
     if (pointsRef.current) {
-        // Slow constant rotation
-        pointsRef.current.rotation.y += delta * 0.05;
+        // Constant rotation, faster when listening
+        pointsRef.current.rotation.y += delta * (isListening ? 0.4 : 0.05);
         // Interactive tilt
         pointsRef.current.rotation.x = THREE.MathUtils.lerp(pointsRef.current.rotation.x, targetY, 0.05);
         pointsRef.current.rotation.z = THREE.MathUtils.lerp(pointsRef.current.rotation.z, -targetX, 0.05);
 
-        // Gentle pulse
-        const s = 1 + Math.sin(time * 1.5) * 0.02;
+        // Intensive pulse when listening
+        const pulseSpeed = isListening ? 6 : 1.5;
+        const pulseAmp = isListening ? 0.15 : 0.02;
+        const s = 1 + Math.sin(time * pulseSpeed) * pulseAmp;
         pointsRef.current.scale.set(s, s, s);
     }
 
     if (shellRef.current) {
-        shellRef.current.rotation.y -= delta * 0.1;
+        shellRef.current.rotation.y -= delta * (isListening ? 0.3 : 0.1);
         shellRef.current.rotation.x = THREE.MathUtils.lerp(shellRef.current.rotation.x, targetY * 1.2, 0.08);
         shellRef.current.rotation.z = THREE.MathUtils.lerp(shellRef.current.rotation.z, -targetX * 1.2, 0.08);
     }
@@ -93,12 +95,12 @@ const ParticleSwarm = () => {
         <Points ref={pointsRef} positions={positions} stride={3}>
             <PointMaterial
                 transparent
-                color="#06b6d4" // cyan-500
-                size={0.035}
+                color={isListening ? "#22d3ee" : "#06b6d4"} 
+                size={isListening ? 0.05 : 0.035}
                 sizeAttenuation={true}
                 depthWrite={false}
                 blending={THREE.AdditiveBlending}
-                opacity={0.7}
+                opacity={isListening ? 0.9 : 0.7}
             />
         </Points>
     </group>
@@ -112,20 +114,20 @@ const BackgroundField = () => {
     );
 };
 
-export const AssistantModel = () => {
+export const AssistantModel = ({ isListening = false }: { isListening?: boolean }) => {
   return (
     <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 0 }}>
       <BackgroundField />
       
       <Canvas>
         <PerspectiveCamera makeDefault position={[0, 0, 7.5]} fov={55} />
-        <ambientLight intensity={0.4} />
+        <ambientLight intensity={isListening ? 1.5 : 0.4} />
         
-        <pointLight position={[10, 10, 10]} intensity={3} color="#ffffff" />
+        <pointLight position={[10, 10, 10]} intensity={isListening ? 6 : 3} color={isListening ? "#22d3ee" : "#ffffff"} />
         <pointLight position={[-10, -10, -10]} intensity={4} color="#8b5cf6" />
         <pointLight position={[0, 5, -5]} intensity={2} color="#06b6d4" />
         
-        <ParticleSwarm />
+        <ParticleSwarm isListening={isListening} />
         
         <OrbitControls 
             enableZoom={false} 

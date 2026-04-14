@@ -291,7 +291,48 @@ body {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+/* --- HUD ANIMATIONS --- */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
 /* Scrollbars */
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Utility specifically for the dashboard cards */
+.hud-border-gradient {
+  border: 1px solid transparent;
+  background-image: linear-gradient(var(--surface), var(--surface)), 
+                    linear-gradient(135deg, var(--primary), transparent, var(--secondary));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
 

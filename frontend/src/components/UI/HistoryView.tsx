@@ -2,7 +2,11 @@ import React from 'react';
 import { mockAnnouncements } from '../../data/mockData';
 import { History, Bell, Search, Filter, ArrowRight } from 'lucide-react';
 
-export const HistoryView: React.FC = () => {
+interface HistoryViewProps {
+  setActiveTab: (tab: string) => void;
+}
+
+export const HistoryView: React.FC<HistoryViewProps> = ({ setActiveTab }) => {
     return (
         <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-left-4 duration-700 h-full">
             <header className="flex items-center justify-between">
@@ -42,7 +46,10 @@ export const HistoryView: React.FC = () => {
                             <p className="text-xs text-text-dim leading-relaxed max-w-2xl">
                                 {log.content}
                             </p>
-                            <button className="text-[10px] font-bold text-primary uppercase tracking-widest mt-2 flex items-center gap-2 group-hover:translate-x-1 transition-transform">
+                            <button 
+                                onClick={() => setActiveTab('history')}
+                                className="text-[10px] font-bold text-primary uppercase tracking-widest mt-2 flex items-center gap-2 group-hover:translate-x-1 transition-transform"
+                            >
                                 Read Full Document <ArrowRight className="w-3 h-3" />
                             </button>
                         </div>

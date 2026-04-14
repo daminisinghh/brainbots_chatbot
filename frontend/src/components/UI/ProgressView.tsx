@@ -2,7 +2,11 @@ import React from 'react';
 import { mockAttendance } from '../../data/mockData';
 import { Activity, ShieldCheck, AlertTriangle, TrendingUp, BarChart3 } from 'lucide-react';
 
-export const ProgressView: React.FC = () => {
+interface ProgressViewProps {
+  setActiveTab: (tab: string) => void;
+}
+
+export const ProgressView: React.FC<ProgressViewProps> = ({ setActiveTab }) => {
     const handleDownloadReport = () => {
         const reportContent = `
 =========================================
@@ -91,7 +95,10 @@ ${mockAttendance.map(item => `- ${item.subject}: ${item.percentage}% [${item.att
                             </div>
                         </div>
 
-                        <button className="text-[10px] font-bold text-primary uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 mt-2">
+                        <button 
+                            onClick={() => setActiveTab('analytics')}
+                            className="text-[10px] font-bold text-primary uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 mt-2"
+                        >
                              Full Analysis <TrendingUp className="w-3 h-3" />
                         </button>
                     </div>

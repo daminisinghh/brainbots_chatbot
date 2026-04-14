@@ -2,16 +2,15 @@ import React, { useEffect } from 'react';
 import { motion, useSpring } from 'framer-motion';
 
 export const MouseGlow: React.FC = () => {
-
-
-    // Smooth spring physics for the glow to "trail" slightly
-    const springX = useSpring(0, { stiffness: 50, damping: 20 });
-    const springY = useSpring(0, { stiffness: 50, damping: 20 });
+    // Smoother, slightly slower springs for a more "liquid" feel
+    const springX = useSpring(0, { stiffness: 40, damping: 25 });
+    const springY = useSpring(0, { stiffness: 40, damping: 25 });
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
-            springX.set(e.clientX - 250); // Offset by half the width
-            springY.set(e.clientY - 250);
+            // Offset to center the glow on the cursor (assuming 400px width)
+            springX.set(e.clientX - 200);
+            springY.set(e.clientY - 200);
         };
 
         window.addEventListener('mousemove', handleMouseMove);
@@ -19,21 +18,37 @@ export const MouseGlow: React.FC = () => {
     }, [springX, springY]);
 
     return (
-        <motion.div
-            style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '500px',
-                height: '500px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(6, 182, 212, 0.05) 40%, transparent 70%)',
-                filter: 'blur(60px)',
-                pointerEvents: 'none',
-                zIndex: 1,
-                x: springX,
-                y: springY,
-            }}
-        />
+        <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 100 }}>
+            {/* The Outer Nebula Glow (Violet) */}
+            <motion.div
+                style={{
+                    position: 'absolute',
+                    width: '400px',
+                    height: '400px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, rgba(139, 92, 246, 0.05) 50%, transparent 75%)',
+                    filter: 'blur(50px)',
+                    x: springX,
+                    y: springY,
+                }}
+            />
+            
+            {/* The Inner Core Spark (Cyan) */}
+            <motion.div
+                style={{
+                    position: 'absolute',
+                    width: '150px',
+                    height: '150px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(6, 182, 212, 0.5) 0%, rgba(6, 182, 212, 0.1) 40%, transparent 70%)',
+                    filter: 'blur(20px)',
+                    x: springX,
+                    y: springY,
+                    // Offset this one slightly to be in the center of the outer glow
+                    translateX: 125,
+                    translateY: 125,
+                }}
+            />
+        </div>
     );
 };
