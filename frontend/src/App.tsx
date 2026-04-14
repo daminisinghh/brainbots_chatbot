@@ -47,8 +47,16 @@ function App() {
   };
 
   return (
-    <div className="relative w-full h-screen bg-bg text-white overflow-hidden">
+    <div className="relative w-full h-screen bg-bg text-white overflow-hidden font-main">
       <MouseGlow />
+      <div className="hud-scanline" />
+      <div className="hud-vignette" />
+      
+      {/* Dynamic Background Orbs */}
+      <div className="neural-orb w-96 h-96 bg-primary/20 top-[-10%] left-[-5%]" />
+      <div className="neural-orb w-80 h-80 bg-secondary/10 bottom-[10%] right-[5%] animation-delay-2000" />
+      <div className="neural-orb w-64 h-64 bg-primary/10 top-[40%] right-[30%] animation-delay-5000" />
+
       {/* Restored Awesome Background & 3D Environment */}
       <AssistantModel isListening={voiceActive} />
       <VoiceAssistant 

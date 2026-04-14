@@ -21,6 +21,9 @@ export interface Attendance {
   percentage: number;
   totalClasses: number;
   attendedClasses: number;
+  engagementScore: number; // 0-100
+  assignmentCompletion: number; // %
+  examScore: number; // %
 }
 
 export interface Announcement {
@@ -45,10 +48,10 @@ export const mockAssignments: Assignment[] = [
 ];
 
 export const mockAttendance: Attendance[] = [
-  { subject: 'Machine Learning', percentage: 85, totalClasses: 20, attendedClasses: 17 },
-  { subject: 'Algorithms', percentage: 72, totalClasses: 18, attendedClasses: 13 },
-  { subject: 'Cloud Computing', percentage: 92, totalClasses: 15, attendedClasses: 14 },
-  { subject: 'Neural Networks', percentage: 65, totalClasses: 12, attendedClasses: 8 },
+  { subject: 'Machine Learning', percentage: 85, totalClasses: 20, attendedClasses: 17, engagementScore: 82, assignmentCompletion: 90, examScore: 78 },
+  { subject: 'Algorithms', percentage: 72, totalClasses: 18, attendedClasses: 13, engagementScore: 65, assignmentCompletion: 68, examScore: 70 },
+  { subject: 'Cloud Computing', percentage: 92, totalClasses: 15, attendedClasses: 14, engagementScore: 88, assignmentCompletion: 95, examScore: 85 },
+  { subject: 'Neural Networks', percentage: 58, totalClasses: 12, attendedClasses: 7, engagementScore: 45, assignmentCompletion: 42, examScore: 50 },
 ];
 
 export const mockAnnouncements: Announcement[] = [

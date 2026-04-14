@@ -12,13 +12,37 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer,
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
-import { mockAssignments } from '../../data/mockData';
+import { motion } from 'framer-motion';
+import { RiskAlerts } from './RiskAlerts';
+import { detectRisk } from '../../logic/riskEngine';
+import { mockAttendance, mockAssignments } from '../../data/mockData';
+
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+        opacity: 1,
+        transition: { 
+            staggerChildren: 0.1,
+            delayChildren: 0.2
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: { 
+        opacity: 1, 
+        y: 0, 
+        scale: 1,
+        transition: { type: 'spring' as const, stiffness: 100, damping: 12 }
+    }
+};
 
 const gpaHistoryData = [
-  { term: 'Fall 2024', gpa: 3.1 },
-  { term: 'Spr 2025', gpa: 3.3 },
-  { term: 'Fall 2025', gpa: 3.6 },
-  { term: 'Spr 2026', gpa: 3.8, isPrediction: true },
+  { term: 'Term 1', gpa: 3.1 },
+  { term: 'Term 2', gpa: 3.3 },
+  { term: 'Term 3', gpa: 3.6 },
+  { term: 'Predicted Term 4', gpa: 3.8, isPrediction: true },
 ];
 
 const stabilityData = [
@@ -68,10 +92,26 @@ export const Dashboard: React.FC = () => {
     return item;
   });
 
+  // Generate Risk Alerts from Subject Data
+  const riskAlerts = mockAttendance.map(subject => ({
+      subject: subject.subject,
+      analysis: detectRisk({
+          attendance: subject.percentage,
+          engagement: subject.engagementScore,
+          assignments: subject.assignmentCompletion,
+          exams: subject.examScore
+      })
+  })).filter(alert => alert.analysis.level !== 'LOW');
+
   return (
-    <div className="flex flex-col gap-6 animate-in fade-in duration-1000">
+    <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex flex-col gap-6"
+    >
       {/* Top HUD Core Status Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="pro-panel p-4 flex items-center justify-between border-primary/20 bg-primary/5">
             <div className="flex items-center gap-3">
                 <div className="p-2 bg-primary/20 rounded shadow-[0_0_10px_rgba(59,130,246,0.3)]">
@@ -110,18 +150,18 @@ export const Dashboard: React.FC = () => {
             </div>
             <span className="text-[10px] font-mono text-violet-400 font-bold">14.2%</span>
         </div>
-      </div>
+      </motion.div>
 
       {/* 3D Chart Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="pro-panel p-6 flex flex-col gap-4 min-h-[300px] group transition-all duration-500 hover:border-primary/30">
+        <motion.div variants={itemVariants} className="pro-panel p-6 flex flex-col gap-4 min-h-[300px] hover-glitch group transition-all duration-500 hover:border-primary/30">
             <div className="flex items-center justify-between border-b border-white/5 pb-3">
                 <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                    <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse-glow" />
                     <span className="text-[10px] font-black text-text-main uppercase tracking-[0.2em]">Predictive Trajectory</span>
                 </div>
                 <div className="text-right">
-                    <div className="text-2xl font-black font-mono leading-none text-glow text-primary">{loading ? '--' : (prediction?.predicted_gpa || 'N/A')}</div>
+                    <div className="text-2xl font-black font-mono leading-none text-glow text-primary animate-pulse">{loading ? '--' : (prediction?.predicted_gpa || 'N/A')}</div>
                     <div className="text-[8px] text-text-dim font-bold uppercase tracking-widest mt-1">Projected_Outcome</div>
                 </div>
             </div>
@@ -154,12 +194,12 @@ export const Dashboard: React.FC = () => {
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-        </div>
+        </motion.div>
 
-        <div className="pro-panel p-6 flex flex-col gap-4 min-h-[300px] group transition-all duration-500 hover:border-cyan-500/30">
+        <motion.div variants={itemVariants} className="pro-panel p-6 flex flex-col gap-4 min-h-[300px] hover-glitch group transition-all duration-500 hover:border-cyan-500/30">
             <div className="flex items-center justify-between border-b border-white/5 pb-3">
                 <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
+                    <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse-glow" />
                     <span className="text-[10px] font-black text-text-main uppercase tracking-[0.2em]">Efficiency Radar</span>
                 </div>
                 <div className="text-right">
@@ -192,16 +232,20 @@ export const Dashboard: React.FC = () => {
                     </RadarChart>
                 </ResponsiveContainer>
             </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Feature Row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="pro-panel p-6 flex flex-col gap-6">
-            <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                <h3 className="font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-primary" /> Active_Task_Matrix
-                </h3>
+        <motion.div variants={itemVariants} className="flex flex-col gap-6">
+            {/* Risk Alert System Integration */}
+            <RiskAlerts alerts={riskAlerts} />
+
+            <div className="pro-panel p-6 flex flex-col gap-6 hover-glitch">
+                <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                    <h3 className="font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-primary" /> Active_Task_Matrix
+                    </h3>
                 <span className="text-[8px] font-black text-primary px-2 py-1 bg-primary/10 border border-primary/20 rounded lowercase">4_pending_ops</span>
             </div>
             <div className="flex flex-col gap-3 px-1">
@@ -227,8 +271,9 @@ export const Dashboard: React.FC = () => {
                 ))}
             </div>
         </div>
+        </motion.div>
 
-        <div className="pro-panel p-6 flex flex-col gap-6 border-cyan-500/10">
+        <motion.div variants={itemVariants} className="pro-panel p-6 flex flex-col gap-6 border-cyan-500/10 hover-glitch">
             <div className="flex items-center justify-between border-b border-white/5 pb-4">
                 <h3 className="font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-cyan-400" /> Neural_Directives
@@ -257,9 +302,9 @@ export const Dashboard: React.FC = () => {
                     ))}
                 </div>
             )}
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
