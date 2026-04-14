@@ -110,7 +110,7 @@ function App() {
                 <span className="text-xs font-bold uppercase tracking-widest">Nexus_Intelligence</span>
             </div>
 
-            <div className="flex-1 flex flex-col gap-6 overflow-hidden">
+            <div className="flex-1 flex flex-col gap-4 overflow-hidden">
                 <div className="pro-panel p-5 bg-primary/5 border-primary/20">
                     <h3 className="text-xs font-bold text-primary mb-2 uppercase">System Status</h3>
                     <div className="flex justify-between text-[10px] font-mono mb-1">
@@ -119,9 +119,13 @@ function App() {
                     </div>
                 </div>
 
-                <div className="flex-1 overflow-hidden flex flex-col pro-panel">
-                    <div className="p-4 border-b border-border bg-white/5">
-                        <span className="text-[10px] font-bold uppercase">Direct Command Entry</span>
+                <div className="flex-1 overflow-hidden flex flex-col pro-panel border-white/10">
+                    <div className="px-4 py-2 border-b border-white/5 bg-white/5 flex items-center justify-between">
+                        <span className="text-[9px] font-bold uppercase tracking-widest opacity-60">Direct Command Entry</span>
+                        <div className="flex gap-1.5">
+                            <div className="w-1.5 h-1.5 rounded-full bg-primary/40 animate-pulse" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+                        </div>
                     </div>
                     <div className="flex-1 overflow-hidden">
                         <ChatInterface />

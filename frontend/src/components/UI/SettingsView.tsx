@@ -1,9 +1,23 @@
 import React, { useState } from 'react';
-import { Settings, Shield, Palette, LogOut, Terminal } from 'lucide-react';
+import { Settings, Shield, Palette, LogOut, Terminal, CheckCircle } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
     const [glassIntensity, setGlassIntensity] = useState(35);
     const [aiConfidence, setAiConfidence] = useState(85);
+    const [twoFactor, setTwoFactor] = useState(true);
+    const [keyRotation, setKeyRotation] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [showSuccess, setShowSuccess] = useState(false);
+
+    const handleApply = () => {
+        setIsSaving(true);
+        // Simulate a system update
+        setTimeout(() => {
+            setIsSaving(false);
+            setShowSuccess(true);
+            setTimeout(() => setShowSuccess(false), 3000);
+        }, 800);
+    };
 
     return (
         <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-700 pb-12">
@@ -14,7 +28,20 @@ export const SettingsView: React.FC = () => {
                     </h2>
                     <p className="text-xs text-text-dim">Nexus Configuration • User Personalization</p>
                 </div>
-                <button className="pro-button bg-primary py-2 px-6">Apply Changes</button>
+                <div className="flex items-center gap-4">
+                    {showSuccess && (
+                        <div className="flex items-center gap-2 text-green-400 text-[10px] font-bold uppercase animate-in zoom-in fade-in">
+                            <CheckCircle className="w-3 h-3" /> Preferences_Cached
+                        </div>
+                    )}
+                    <button 
+                        onClick={handleApply} 
+                        disabled={isSaving}
+                        className={`pro-button py-2 px-6 ${isSaving ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                        {isSaving ? 'SYNCING...' : 'Apply Changes'}
+                    </button>
+                </div>
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -31,8 +58,15 @@ export const SettingsView: React.FC = () => {
                                 <h4 className="text-[10px] font-bold text-white uppercase tracking-wider">Two-Factor Authentication</h4>
                                 <p className="text-[10px] text-text-dim">Secure terminal logins with secondary tokens</p>
                             </div>
-                            <div className="w-10 h-5 rounded-full bg-primary/20 relative cursor-pointer border border-primary/30">
-                                <div className="absolute right-1 top-1 w-3 h-3 bg-primary rounded-full" />
+                            <div 
+                                onClick={() => setTwoFactor(!twoFactor)}
+                                className={`w-10 h-5 rounded-full relative cursor-pointer border transition-all duration-300 ${
+                                    twoFactor ? 'bg-primary/20 border-primary/30' : 'bg-white/5 border-white/10'
+                                }`}
+                            >
+                                <div className={`absolute top-1 w-3 h-3 rounded-full transition-all duration-300 ${
+                                    twoFactor ? 'right-1 bg-primary' : 'left-1 bg-text-dim'
+                                }`} />
                             </div>
                         </div>
 
@@ -41,8 +75,15 @@ export const SettingsView: React.FC = () => {
                                 <h4 className="text-[10px] font-bold text-white uppercase tracking-wider">Neural Key Rotation</h4>
                                 <p className="text-[10px] text-text-dim">Rotate AI authentication keys every 30 days</p>
                             </div>
-                            <div className="w-10 h-5 rounded-full bg-white/5 relative cursor-pointer border border-white/10">
-                                <div className="absolute left-1 top-1 w-3 h-3 bg-text-dim rounded-full" />
+                            <div 
+                                onClick={() => setKeyRotation(!keyRotation)}
+                                className={`w-10 h-5 rounded-full relative cursor-pointer border transition-all duration-300 ${
+                                    keyRotation ? 'bg-primary/20 border-primary/30' : 'bg-white/5 border-white/10'
+                                }`}
+                            >
+                                <div className={`absolute top-1 w-3 h-3 rounded-full transition-all duration-300 ${
+                                    keyRotation ? 'right-1 bg-primary' : 'left-1 bg-text-dim'
+                                }`} />
                             </div>
                         </div>
                     </div>

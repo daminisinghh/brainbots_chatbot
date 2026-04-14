@@ -54,10 +54,25 @@ export const parseMessage = (text: string): AssistantResponse => {
   }
 
   // Announcements
-  if (query.includes('announcement') || query.includes('notice') || query.includes('news') || query.includes('faculty')) {
+  if (query.includes('announcement') || query.includes('notice') || query.includes('news') || query.includes('what\'s new') || query.includes('faculty')) {
+    if (mockAnnouncements.length === 0) {
+      return {
+        intent: 'get_announcements',
+        message: "There are currently no new announcements on the Nexus network.",
+        data: [],
+      };
+    }
+    const latest = mockAnnouncements[0];
+    if (query.includes('about') || query.includes('detail') || query.includes('is it')) {
+      return {
+        intent: 'get_announcements',
+        message: `The announcement "${latest.title}" is regarding: ${latest.content}`,
+        data: mockAnnouncements,
+      };
+    }
     return {
       intent: 'get_announcements',
-      message: `There are ${mockAnnouncements.length} new announcements. The latest is: "${mockAnnouncements[0].title}".`,
+      message: `I've found ${mockAnnouncements.length} updates. The most recent is "${latest.title}". Would you like the full details?`,
       data: mockAnnouncements,
     };
   }

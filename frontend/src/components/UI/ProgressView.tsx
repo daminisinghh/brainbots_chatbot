@@ -3,6 +3,35 @@ import { mockAttendance } from '../../data/mockData';
 import { Activity, ShieldCheck, AlertTriangle, TrendingUp, BarChart3 } from 'lucide-react';
 
 export const ProgressView: React.FC = () => {
+    const handleDownloadReport = () => {
+        const reportContent = `
+=========================================
+      NEXUS CORE - SYNERGY REPORT
+=========================================
+Generated: ${new Date().toLocaleString()}
+
+ACADEMIC STABILITY & ENGAGEMENT ANALYTICS
+Overall Index: 82.4%
+AI Synthesis: 92% probability of achieving Target GPA
+
+MODULE BREAKDOWN:
+${mockAttendance.map(item => `- ${item.subject}: ${item.percentage}% [${item.attendedClasses}/${item.totalClasses} Units]`).join('\n')}
+
+=========================================
+    END OF REPORT
+=========================================`;
+
+        const blob = new Blob([reportContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Synergy_Report_${Date.now()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-700">
             <header className="flex items-center justify-between">
@@ -79,7 +108,7 @@ export const ProgressView: React.FC = () => {
                         </p>
                     </div>
                 </div>
-                <button className="pro-button uppercase text-[10px] tracking-[0.2em] font-bold py-3">Download Synergy Report</button>
+                <button onClick={handleDownloadReport} className="pro-button uppercase text-[10px] tracking-[0.2em] font-bold py-3">Download Synergy Report</button>
             </div>
         </div>
     );
