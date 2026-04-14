@@ -12,6 +12,7 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer,
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis
 } from 'recharts';
+import { mockAssignments } from '../../data/mockData';
 
 // Mock historical & predicted data for chart
 const gpaHistoryData = [
@@ -79,7 +80,7 @@ export const Dashboard: React.FC = () => {
                 </div>
             </div>
             
-            <div className="flex-1 w-full relative">
+            <div className="h-[200px] w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                         <defs>
@@ -127,7 +128,7 @@ export const Dashboard: React.FC = () => {
                 </div>
             </div>
 
-            <div className="flex-1 w-full relative left-[-15px]">
+            <div className="h-[200px] w-full relative left-[-15px]">
                 <ResponsiveContainer width="100%" height="100%">
                     <RadarChart cx="50%" cy="50%" outerRadius="75%" data={stabilityData}>
                         <PolarGrid stroke="#334155" />
@@ -156,24 +157,21 @@ export const Dashboard: React.FC = () => {
                 <span className="text-[10px] font-bold text-text-dim px-2 py-1 bg-white/5 rounded-full">4 PENDING</span>
             </div>
             <div className="flex flex-col gap-3">
-                {[
-                    { t: 'Advanced Calculus III Mid-Term', d: 'Tomorrow, 10:00 AM', p: 'Critical', c: 'bg-red-500/20 text-red-400 border-red-500/30' },
-                    { t: 'Project Alpha Documentation', d: 'In 2 hrs', p: 'High', c: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
-                    { t: 'Physics Lab Report #04', d: 'In 1 day', p: 'Medium', c: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' },
-                    { t: 'Network Layer Research', d: 'In 3 days', p: 'Low', c: 'bg-green-500/20 text-green-400 border-green-500/30' }
-                ].map((item, i) => (
+                {mockAssignments.slice(0, 4).map((item, i) => (
                     <div key={i} className="pro-card p-4 flex items-center justify-between group hover:border-white/20 transition-all cursor-pointer">
                         <div className="flex items-center gap-4">
                             <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
                                 <Clock className="w-4 h-4 text-text-dim group-hover:text-primary" />
                             </div>
                             <div>
-                                <div className="text-xs font-bold text-white group-hover:text-primary transition-colors">{item.t}</div>
-                                <div className="text-[10px] text-text-dim mt-1 font-mono tracking-wider">{item.d}</div>
+                                <div className="text-xs font-bold text-white group-hover:text-primary transition-colors">{item.title}</div>
+                                <div className="text-[10px] text-text-dim mt-1 font-mono tracking-wider">Due {item.dueDate}</div>
                             </div>
                         </div>
-                        <div className={`text-[10px] font-bold px-3 py-1 border rounded-full uppercase tracking-wider ${item.c}`}>
-                            {item.p}
+                        <div className={`text-[10px] font-bold px-3 py-1 border rounded-full uppercase tracking-wider ${
+                            item.priority === 'high' ? 'bg-red-500/20 text-red-400 border-red-500/30' : 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+                        }`}>
+                            {item.priority}
                         </div>
                     </div>
                 ))}
