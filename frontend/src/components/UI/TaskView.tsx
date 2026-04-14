@@ -5,6 +5,9 @@ import { Plus, MoreHorizontal, AlertCircle, Clock, CheckCircle2, ChevronRight, T
 export const TaskView: React.FC = () => {
     const [tasks, setTasks] = useState(initialAssignments);
 
+    const [isCreating, setIsCreating] = useState(false);
+    const [newTaskTitle, setNewTaskTitle] = useState('');
+
     const toggleStatus = (id: string) => {
         setTasks(prev => prev.map(t => {
             if (t.id === id) {
@@ -15,18 +18,24 @@ export const TaskView: React.FC = () => {
         }));
     };
 
-    const addTask = () => {
-        const title = prompt("Enter new directive title:");
-        if (!title) return;
+    const handleCreateTask = (e?: React.FormEvent) => {
+        if (e) e.preventDefault();
+        if (!newTaskTitle.trim()) {
+            setIsCreating(false);
+            return;
+        }
+        
         const newTask = {
             id: Date.now().toString(),
-            title: title,
+            title: newTaskTitle,
             subject: "SYSTEM",
             dueDate: "pending",
             status: "pending" as const,
             priority: "medium" as const
         };
         setTasks(prev => [...prev, newTask]);
+        setNewTaskTitle('');
+        setIsCreating(false);
     };
 
     const deleteTask = (id: string, e: React.MouseEvent) => {
@@ -42,14 +51,32 @@ export const TaskView: React.FC = () => {
 
     return (
         <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-700 h-full">
-            <header className="flex items-center justify-between">
+            <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h2 className="text-xl font-bold tracking-tight uppercase tracking-widest">Task Matrix</h2>
                     <p className="text-xs text-text-dim font-mono">Central Objective Distribution • Nexus Core</p>
                 </div>
-                <button onClick={addTask} className="pro-button flex items-center gap-2 py-2 px-4 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:scale-105 transition-transform">
-                    <Plus className="w-4 h-4" /> Initialize Task
-                </button>
+                {isCreating ? (
+                    <form onSubmit={handleCreateTask} className="flex flex-col sm:flex-row items-center gap-2">
+                        <input 
+                            autoFocus
+                            value={newTaskTitle}
+                            onChange={e => setNewTaskTitle(e.target.value)}
+                            placeholder="DIRECTIVE_TITLE..."
+                            className="bg-black/50 border border-primary/50 text-white px-3 py-1.5 rounded text-xs font-mono focus:outline-none focus:border-primary shadow-[0_0_15px_rgba(59,130,246,0.1)] w-full sm:w-auto"
+                        />
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <button type="button" onClick={() => setIsCreating(false)} className="px-2 py-1.5 text-xs text-text-dim hover:text-white transition-colors">Cancel</button>
+                            <button type="submit" className="pro-button py-1.5 px-4 shadow-[0_0_20px_rgba(59,130,246,0.2)] hover:scale-105 transition-transform flex items-center justify-center gap-2 whitespace-nowrap">
+                                <Plus className="w-3 h-3"/> Save
+                            </button>
+                        </div>
+                    </form>
+                ) : (
+                    <button onClick={() => setIsCreating(true)} className="pro-button flex items-center justify-center gap-2 py-2 px-4 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:scale-105 transition-transform w-[180px]">
+                        <Plus className="w-4 h-4" /> Initialize Task
+                    </button>
+                )}
             </header>
 
             <div className="flex gap-6 h-full min-h-[600px] overflow-x-auto pb-6">
@@ -113,7 +140,7 @@ export const TaskView: React.FC = () => {
                             ))}
 
                             {/* New Task Entry Placeholder */}
-                            <div onClick={addTask} className="border border-dashed border-white/10 rounded-lg p-6 flex flex-col items-center justify-center gap-2 group hover:bg-white/5 hover:border-primary/30 transition-all cursor-pointer">
+                            <div onClick={() => setIsCreating(true)} className="border border-dashed border-white/10 rounded-lg p-6 flex flex-col items-center justify-center gap-2 group hover:bg-white/5 hover:border-primary/30 transition-all cursor-pointer">
                                 <Plus className="w-6 h-6 text-text-dim group-hover:text-primary transition-transform group-hover:scale-110" />
                                 <span className="text-[10px] font-bold text-text-dim uppercase tracking-widest group-hover:text-primary">New_Directive</span>
                             </div>
